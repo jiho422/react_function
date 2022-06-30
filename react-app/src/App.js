@@ -27,92 +27,90 @@ class App extends Component{
       ]
     }
   }
-  
-  // getReadContent start
+
+  //getReadContent start
 
   getReadContent(){
     let i = 0;
-    while(i < this.state.contents.length){
-      let data = this.state.contents[i];
-      if(data.id === this.state.selected_content_id){
+      while(i < this.state.contents.length) {
+        let data = this.state.contents[i];
+        if(data.id === this.state.selected_content_id) {
           return data;
+        }
+        i = i + 1;
       }
-      i++;
-    }
   }
-  
 
-  // getReadContent end
+  //getReadContent end
 
   //getContent start
-
+  
   getContent(){
-    let _title, _desc=null, _article;
-      if(this.state.mode === 'welcome'){
-        _title = this.state.welcome.title;
-        _desc = this.state.welcome.desc;
-        _article = <ReadContent title={_title} desc={_desc}></ReadContent>;
-      }else if(this.state.mode === 'read'){
-        // _title = this.state.contents[0].title;
-        // _desc = this.state.contents[0].desc;  
-
-        let _content = this.getReadContent();
-        _article = <ReadContent title={_content.title} desc={_content.desc}></ReadContent>;
-      }else if(this.state.mode === 'create'){
+    let _title, _desc = null, _article;
+    if(this.state.mode === 'welcome'){
+      _title = this.state.welcome.title;
+      _desc = this.state.welcome.desc;
+      _article = <ReadContent title={_title} desc={_desc}></ReadContent>;
+    }else if(this.state.mode === 'read'){
+      let _content = this.getReadContent();
+      _article = <ReadContent title={_content.title} desc={_content.desc}></ReadContent>;
+    }else if(this.state.mode === 'create'){
           _article = <CreateContent onSubmit={function(_title, _desc){
-          this.max_content_id = this.max_content_id + 1;
-          // this.state.contents.push(
-          //   {id:this.max_content_id, title:_title, desc:_desc}
-          // );
+        this.max_content_id = this.max_content_id + 1;
+        // this.state.contents.push(
+        //   {id:this.max_content_id,title:_title,desc:_desc}
+        // );
 
-          // let _contents = this.state.contents.concat(
-          //   {id:this.max_content_id, title:_title, desc:_desc}
-          // );
+        // let _contents = this.state.contents.concat(
+        //      {id:this.max_content_id,title:_title,desc:_desc}
+        //  );
 
-          //원본을 훼손하면서 데이터 추가 -> push, 복사본을 이용하여 원본 훼손 없이 데이터 추가 -> concat
-          let _contents =Array.from(this.state.contents);
-          _contents.push({id:this.max_content_id, title:_title, desc:_desc});
+        let _contents = Array.from(this.state.contents);
+        _contents.push({id:this.max_content_id,title:_title,desc:_desc});
 
-          this.setState({
-            //contents : this.state.contents
-            mode:'read',
-            contents : _contents,
-            selected_content_id:this.max_cotent_id
-          })
-        }.bind(this)}></CreateContent>
-      }else if(this.state.mode === 'update'){
-        let _content = this.getReadContent();
-        _article = <UpdateContent
+        this.setState({
+          //contents : this.state.contents
+          mode:'read',
+          contents : _contents,
+          selected_content_id:this.max_content_id
+        })
+      }.bind(this)}></CreateContent>
+    }else if(this.state.mode === 'update'){
+      let _content = this.getReadContent();
+      _article = <UpdateContent 
                     data = {_content} 
                     onSubmit={function(_id, _title, _desc){
-                        let _contents = Array.from(this.state.contents);
-                        let i = 0;
-                        while(i < _contents.length){
-                          if(_contents[i].id == _id){
-                            _contents[i] = {id:_id, title:_title, desc:_desc};
-                            break;
-                          }
-                          i++;
+                      let _contents = Array.from(this.state.contents);
+                      let i = 0;
+                      while(i < _contents.length){
+                        if(_contents[i].id == _id){
+                          _contents[i] = {id:_id,title:_title,desc:_desc};
+                          break;
                         }
-                        this.setState({
-                          contents:_contents,
-                          mode:'read'
-                        })
+                        i++;
+                      }
+                      this.setState({
+                        contents:_contents,
+                        mode:'read'
+                      })
                     }.bind(this)}>
-                    </UpdateContent>
-      }
-      return _article;
+
+                  </UpdateContent>
+    }
+
+    return _article;
   }
 
   //getContent end
+
   render(){
     console.log('App render');
-    
+
     return (
       <div>
-        <Subject
-        title={this.state.subject.title}
-        sub={this.state.subject.sub}
+        <Subject 
+          title={this.state.subject.title} 
+          sub={this.state.subject.sub} 
         onChangePage={function(){this.setState({mode:'welcome'})}.bind(this)}>
         </Subject>
         {/* ---------------------------------------------------------------------------------------- */}
@@ -126,19 +124,19 @@ class App extends Component{
         {/* ---------------------------------------------------------------------------------------- */}
         <TOC
         data = {this.state.contents}
-        onChangePage={function(id){
+          onChangePage={function(id){
           this.setState({
-            mode:'read', 
+                mode:'read',
             selected_content_id:Number(id)},
           )}
           .bind(this)}
         >  {/* 하위->상위 호출 :이벤트 사용, 상위->하위 호출:props사용//번거로운 과정을 줄이기 위해 형제 간 이동은 redux 사용 */}
         </TOC>
         <Control onChangeMode={function(_mode){
-          this.setState({
-            mode:_mode
+            this.setState({
+              mode:_mode
           })
-        }.bind(this)}></Control>
+          }.bind(this)}></Control>
         {this.getContent()}
         <Table></Table>
         <Image></Image>
@@ -148,7 +146,7 @@ class App extends Component{
   }
 }
 
-  export default App;
+export default App;
   // (
   //   <div className="App">
   //     <header className="App-header">
