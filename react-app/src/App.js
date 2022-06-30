@@ -3,7 +3,9 @@ import './App.css';
 import React,  { Component } from 'react';
 import TOC from './components/TOC';
 import Subject from './components/Subject';
-import Content from './components/Content';
+import ReadContent from './components/ReadContent';
+import CreateContent from './components/CreateContent';
+import UpdateContent from './components/UpdateContent';
 import Table from './components/Table';
 import Image from './components/Image';
 import Button from './components/Button';
@@ -12,6 +14,7 @@ import Control from './components/Control';
 class App extends Component{
   constructor(props){
     super(props);
+    this.max_content_id = 3;
     this.state= {
       mode:'read',
       selected_content_id:2,
@@ -27,11 +30,12 @@ class App extends Component{
   
   render(){
     console.log('App render');
-    let _title, _desc=null;
-    if(this.state.mode === 'welcome'){
+    let _title, _desc=null, _article;
+      if(this.state.mode === 'welcome'){
         _title = this.state.welcome.title;
         _desc = this.state.welcome.desc;
-    }else if(this.state.mode === 'read'){
+        _article = <ReadContent title={_title} desc={_desc}></ReadContent>;
+      }else if(this.state.mode === 'read'){
         // _title = this.state.contents[0].title;
         // _desc = this.state.contents[0].desc;
         let i = 0;
@@ -44,7 +48,26 @@ class App extends Component{
           }
           i++;
         }
-    }
+        _article = <ReadContent title={_title} desc={_desc}></ReadContent>;
+      }else if(this.state.mode === 'create'){
+          _article = <CreateContent onSubmit={function(_title, _desc){
+          this.max_content_id = this.max_content_id + 1;
+          // this.state.contents.push(
+          //   {id:this.max_content_id, title:_title, desc:_desc}
+          // );
+
+          let _contents = this.state.contents.concat(
+            {id:this.max_content_id, title:_title, desc:_desc}
+          );
+
+          //원본을 훼손하면서 데이터 추가 -> push, 복사본을 이용하여 원본 훼손 없이 데이터 추가 -> concat
+
+          this.setState({
+            //contents : this.state.contents
+            contents : _contents
+          })
+        }.bind(this)}></CreateContent>
+      }
     return (
       <div>
         <Subject
@@ -76,7 +99,7 @@ class App extends Component{
             mode:_mode
           })
         }.bind(this)}></Control>
-        <Content title={_title} desc={_desc}></Content>
+        {_article}
         <Table></Table>
         <Image></Image>
         <Button></Button>
