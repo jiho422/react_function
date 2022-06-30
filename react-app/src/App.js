@@ -28,8 +28,25 @@ class App extends Component{
     }
   }
   
-  render(){
-    console.log('App render');
+  // getReadContent start
+
+  getReadContent(){
+    let i = 0;
+    while(i < this.state.contents.length){
+      let data = this.state.contents[i];
+      if(data.id === this.state.selected_content_id){
+          return data;
+      }
+      i++;
+    }
+  }
+  
+
+  // getReadContent end
+
+  //getContent start
+
+  getContent(){
     let _title, _desc=null, _article;
       if(this.state.mode === 'welcome'){
         _title = this.state.welcome.title;
@@ -37,18 +54,10 @@ class App extends Component{
         _article = <ReadContent title={_title} desc={_desc}></ReadContent>;
       }else if(this.state.mode === 'read'){
         // _title = this.state.contents[0].title;
-        // _desc = this.state.contents[0].desc;
-        let i = 0;
-        while(i < this.state.contents.length){
-          let data = this.state.contents[i];
-          if(data.id === this.state.selected_content_id){
-            _title = data.title;
-            _desc = data.desc;
-            break;
-          }
-          i++;
-        }
-        _article = <ReadContent title={_title} desc={_desc}></ReadContent>;
+        // _desc = this.state.contents[0].desc;  
+
+        let _content = this.getReadContent();
+        _article = <ReadContent title={_content.title} desc={_content.desc}></ReadContent>;
       }else if(this.state.mode === 'create'){
           _article = <CreateContent onSubmit={function(_title, _desc){
           this.max_content_id = this.max_content_id + 1;
@@ -67,7 +76,34 @@ class App extends Component{
             contents : _contents
           })
         }.bind(this)}></CreateContent>
+      }else if(this.state.mode === 'update'){
+        let _content = this.getReadContent();
+        _article = <UpdateContent
+                    data = {_content} 
+                    onSubmit={function(_id, _title, _desc){
+                        let _contents = Array.from(this.state.contents);
+                        let i = 0;
+                        while(i < _contents.length){
+                          if(_contents[i].id == _id){
+                            _contents[i] = {id:_id, title:_title, desc:_desc};
+                            break;
+                          }
+                          i++;
+                        }
+                        this.setState({
+                          contents:_contents,
+                          mode:'read'
+                        })
+                    }.bind(this)}>
+                    </UpdateContent>
       }
+      return _article;
+  }
+
+  //getContent end
+  render(){
+    console.log('App render');
+    
     return (
       <div>
         <Subject
@@ -99,7 +135,7 @@ class App extends Component{
             mode:_mode
           })
         }.bind(this)}></Control>
-        {_article}
+        {this.getContent()}
         <Table></Table>
         <Image></Image>
         <Button></Button>
