@@ -17,6 +17,7 @@ class TOC extends Component{
         }.bind(this)}>{data[i].title}</a></li>);
         i = i + 1;
       }
+      
       return (
         <nav>
           <ul>

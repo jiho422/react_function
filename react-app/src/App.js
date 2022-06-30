@@ -7,6 +7,7 @@ import Content from './components/Content';
 import Table from './components/Table';
 import Image from './components/Image';
 import Button from './components/Button';
+import Control from './components/Control';
 
 class App extends Component{
   constructor(props){
@@ -70,6 +71,11 @@ class App extends Component{
           .bind(this)}
         >  {/* 하위->상위 호출 :이벤트 사용, 상위->하위 호출:props사용//번거로운 과정을 줄이기 위해 형제 간 이동은 redux 사용 */}
         </TOC>
+        <Control onChangeMode={function(_mode){
+          this.setState({
+            mode:_mode
+          })
+        }.bind(this)}></Control>
         <Content title={_title} desc={_desc}></Content>
         <Table></Table>
         <Image></Image>
