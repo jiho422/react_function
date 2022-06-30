@@ -65,15 +65,19 @@ class App extends Component{
           //   {id:this.max_content_id, title:_title, desc:_desc}
           // );
 
-          let _contents = this.state.contents.concat(
-            {id:this.max_content_id, title:_title, desc:_desc}
-          );
+          // let _contents = this.state.contents.concat(
+          //   {id:this.max_content_id, title:_title, desc:_desc}
+          // );
 
           //원본을 훼손하면서 데이터 추가 -> push, 복사본을 이용하여 원본 훼손 없이 데이터 추가 -> concat
+          let _contents =Array.from(this.state.contents);
+          _contents.push({id:this.max_content_id, title:_title, desc:_desc});
 
           this.setState({
             //contents : this.state.contents
-            contents : _contents
+            mode:'read',
+            contents : _contents,
+            selected_content_id:this.max_cotent_id
           })
         }.bind(this)}></CreateContent>
       }else if(this.state.mode === 'update'){
