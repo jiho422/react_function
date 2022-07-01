@@ -55,7 +55,7 @@ class App extends Component{
       let _content = this.getReadContent();
       _article = <ReadContent title={_content.title} desc={_content.desc}></ReadContent>;
     }else if(this.state.mode === 'create'){
-          _article = <CreateContent onSubmit={function(_title, _desc){
+        _article = <CreateContent onSubmit={function(_title, _desc){
         this.max_content_id = this.max_content_id + 1;
         // this.state.contents.push(
         //   {id:this.max_content_id,title:_title,desc:_desc}
@@ -126,16 +126,35 @@ class App extends Component{
         data = {this.state.contents}
           onChangePage={function(id){
           this.setState({
-                mode:'read',
+            mode:'read',
             selected_content_id:Number(id)},
           )}
           .bind(this)}
         >  {/* 하위->상위 호출 :이벤트 사용, 상위->하위 호출:props사용//번거로운 과정을 줄이기 위해 형제 간 이동은 redux 사용 */}
         </TOC>
         <Control onChangeMode={function(_mode){
-            this.setState({
-              mode:_mode
-          })
+            if(_mode === 'delete'){
+              if(window.confirm('really?')){
+                  let _contents = Array.from(this.state.contents);
+                  let i = 0;
+                  while(i < _contents.length){
+                    if(_contents[i].id === this.state.selected_content_id){
+                      _contents.splice(i, 1);
+                      break;
+                    }
+                    i++;
+                  }
+                  this.setState({
+                    mode:'welcome',
+                    contents : _contents
+                  })
+              }
+
+            }else{
+              this.setState({
+                mode:_mode
+              });
+            }  
           }.bind(this)}></Control>
         {this.getContent()}
         <Table></Table>
