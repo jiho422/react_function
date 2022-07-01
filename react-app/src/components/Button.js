@@ -5,7 +5,6 @@ class Button extends Component{
     return (
         <div>
             <button>Want More?</button>
-            <button>Get More</button>
         </div>
     );
   }
